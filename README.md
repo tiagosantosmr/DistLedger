@@ -134,7 +134,7 @@ Servers periodically exchange their update logs and vector timestamps through th
 ## Contributors
 
 - [Yassir Yassin](https://github.com/yassirscreed)
-- [Tiago Santos](https://github.com/xDraGonGamer)
+- [Tiago Santos](https://github.com/tiagosantosmr)
 - [Javier Muller](https://github.com/JaviMuller)
 
 ## License
