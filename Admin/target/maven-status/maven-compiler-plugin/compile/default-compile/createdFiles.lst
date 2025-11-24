@@ -1,0 +1,8 @@
+pt/tecnico/distledger/adminclient/grpc/AdminService.class
+pt/tecnico/distledger/adminclient/grpc/AdminService$1.class
+pt/tecnico/distledger/adminclient/CommandParser.class
+pt/tecnico/distledger/adminclient/AdminNamingServerManager$1.class
+pt/tecnico/distledger/adminclient/exceptions/AdminException.class
+pt/tecnico/distledger/adminclient/AdminClientMain.class
+pt/tecnico/distledger/adminclient/exceptions/ErrorMessage.class
+pt/tecnico/distledger/adminclient/AdminNamingServerManager.class

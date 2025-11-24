@@ -1,0 +1,70 @@
+syntax = "proto3";
+package pt.tecnico.distledger.grpc.admin;
+option java_package="pt.tecnico.distledger.contract.admin";
+
+import "DistLedgerCommonDefinitions.proto";
+
+// Administrator Interface of the DistLedger Service
+
+message ActivateRequest {}
+
+message SuccessActivateResponse {}
+
+message ActivateResponse {
+  oneof response {
+    SuccessActivateResponse success = 1;
+    ErrorResponse error = 2;
+  }
+}
+
+message DeactivateRequest {}
+
+message SuccessDeactivateResponse {}
+
+message DeactivateResponse {
+  oneof response {
+    SuccessDeactivateResponse success = 1;
+    ErrorResponse error = 2;
+  }
+}
+
+message GossipRequest {}
+
+message SuccessGossipResponse {}
+
+message GossipResponse {
+  oneof response {
+    SuccessGossipResponse success = 1;
+    ErrorResponse error = 2;
+  }
+}
+
+message getLedgerStateRequest {
+}
+
+message getLedgerStateResponse {
+  LedgerState ledgerState = 1;
+}
+
+enum ErrorCode {
+  UNKNOWN = 0;
+  ALREADY_ACTIVATED = 1;
+  ALREADY_DEACTIVATED = 2;
+  SERVER_NOT_FOUND = 3;
+}
+
+//
+// For the existing remote procedure calls no metadata is needed, however, it is kept in the error response for future
+// expandability reasons.
+//
+message ErrorResponse {
+  ErrorCode errorCode = 1;
+  map<string, string> metadata = 2;
+}
+
+service AdminService {
+  rpc activate(ActivateRequest) returns (ActivateResponse);
+  rpc deactivate(DeactivateRequest) returns (DeactivateResponse);
+  rpc gossip(GossipRequest) returns (GossipResponse);
+  rpc getLedgerState(getLedgerStateRequest) returns (getLedgerStateResponse);
+}

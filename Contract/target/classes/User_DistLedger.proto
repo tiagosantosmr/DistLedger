@@ -1,0 +1,125 @@
+syntax = "proto3";
+package pt.tecnico.distledger.grpc.user;
+option java_package="pt.tecnico.distledger.contract.user";
+
+import "DistLedgerCommonDefinitions.proto";
+
+
+// User Interface of the DistLedger Service
+
+message BalanceRequest {
+  Timestamp prevTS = 1;
+  string userId = 2;
+}
+
+message SuccessBalanceResponse {
+  Timestamp newTS = 1;
+  int32 value = 2;
+}
+
+message BalanceResponse {
+  oneof response {
+    SuccessBalanceResponse success = 1;
+    ErrorResponse error = 2;
+  }
+}
+
+message CreateAccountRequest {
+  string id = 1;
+  Timestamp prevTS = 2;
+  string userId = 3;
+}
+
+message SuccessCreateAccountResponse {
+  Timestamp newTS = 1;
+}
+
+message CreateAccountResponse {
+  oneof response {
+    SuccessCreateAccountResponse success = 1;
+    ErrorResponse error = 2;
+  }
+}
+
+message DeleteAccountRequest {
+  string id = 1;
+  Timestamp prevTS = 2;
+  string userId = 3;
+}
+
+message SuccessDeleteAccountResponse {
+  Timestamp newTS = 1;
+}
+
+message DeleteAccountResponse {
+  oneof response {
+    SuccessDeleteAccountResponse success = 1;
+    ErrorResponse error = 2;
+  }
+}
+
+message TransferToRequest {
+  string id = 1;
+  Timestamp prevTS = 2;
+  string accountFrom = 3;
+  string accountTo = 4;
+  int32 amount = 5;
+}
+
+message SuccessTransferToResponse {
+  Timestamp newTS = 1;
+}
+
+message TransferToResponse {
+  oneof response {
+    SuccessTransferToResponse success = 1;
+    ErrorResponse error = 2;
+  }
+}
+
+enum ErrorCode {
+  UNKNOWN = 0;
+  UNAVAILABLE = 1;
+  NONEXISTENT_ACCOUNT = 2;
+  WRITE_TO_SECONDARY = 3;
+}
+
+//
+// The error code transmits the type of exception while the error metadata sends the data about the exception.
+// When the server is unavailable no metadata is sent. For the other defined remote procedure call exceptions we have the next metadata.
+// balance:
+//    NONEXISTENT_ACCOUNT:
+//        account: userId
+// createAccount:
+//    ACCOUNT_ALREADY_EXISTS:
+//        account: userId
+// deleteAccount:
+//    NONEXISTENT_ACCOUNT:
+//        account: userId
+//    NONZERO_BALANCE:
+//        account: userId
+//        balance: state.getBalance(userId).toString()
+// transferToRequest:
+//    NONEXISTENT_ACCOUNT:
+//        account: accountFrom || accountTo
+//    RECEIVER_IS_THE_SAME_AS_SENDER:
+//        account: accountFrom (=accountTo)
+//    INVALID_AMOUNT: (When requested to do a non-positive amount transfer)
+//        amount: amount.toString()
+//    INSUFFICIENT_BALANCE:
+//        account: accountFrom
+//        balance: state.getBalance(accountFrom).toString()
+//        needed: amount.toString()
+//
+message ErrorResponse {
+  Timestamp newTS = 1;
+  ErrorCode errorCode = 2;
+  map<string, string> metadata = 3;
+}
+
+service UserService {
+  rpc balance(BalanceRequest) returns (BalanceResponse);
+  rpc createAccount(CreateAccountRequest) returns (CreateAccountResponse);
+  rpc deleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse);
+  rpc transferTo(TransferToRequest) returns (TransferToResponse);
+}

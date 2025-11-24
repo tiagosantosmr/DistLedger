@@ -1,0 +1,35 @@
+syntax = "proto3";
+package pt.tecnico.distledger.grpc.distledgerserver;
+option java_package="pt.tecnico.distledger.contract.distledgerserver";
+
+import "DistLedgerCommonDefinitions.proto";
+
+// Cross-server interface of the DistLedger Service (only for phases 2 & 3 of the project)
+
+message GossipRequest {
+  UpdateLog log = 1;
+  repeated int32 replicaTS = 2;
+}
+
+message SuccessGossipResponse {}
+
+message GossipResponse {
+  oneof response {
+      SuccessGossipResponse success = 1;
+      ErrorResponse error = 2;
+  }
+}
+
+enum ErrorCode {
+  UNKNOWN = 0;
+  UNAVAILABLE = 1;
+}
+
+message ErrorResponse {
+  ErrorCode errorCode = 1;
+  map<string, string> metadata = 2;
+}
+
+service DistLedgerCrossServerService {
+  rpc gossip(GossipRequest) returns (GossipResponse);
+}

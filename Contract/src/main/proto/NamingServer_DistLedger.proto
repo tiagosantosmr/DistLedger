@@ -1,0 +1,89 @@
+syntax = "proto3";
+package pt.tecnico.distledger.grpc.namingserver;
+option java_package="pt.tecnico.distledger.contract.namingserver";
+
+import "DistLedgerCommonDefinitions.proto";
+
+message RegisterRequest {
+    string service_name = 1;
+    string qualifier = 2;
+    string address = 3;
+}
+
+message SuccessRegisterResponse {
+    string message = 1;
+}
+
+message RegisterResponse {
+    oneof response {
+        SuccessRegisterResponse success = 1;
+        ErrorResponse error = 2;
+    }
+}
+
+message LookupRequest {
+    string service_name = 1;
+    string qualifier = 2;
+}
+  
+  
+message SuccessLookupResponse {
+    string address = 1;
+}
+
+message LookupResponse {
+    oneof response {
+        SuccessLookupResponse success = 1;
+        ErrorResponse error = 2;
+    }
+}
+
+message SubscriberRequest {
+    string service = 1;
+}
+
+
+message SuccessSubscriberResponse{
+    repeated ServerInfo server = 1;
+}
+
+message SubscriberResponse {
+    oneof response {
+        SuccessSubscriberResponse success = 1;
+        ErrorResponse error = 2;
+    }
+}
+
+message DeleteRequest {
+    string serviceName = 1;
+    string qualifier = 2;
+}
+
+message SuccessDeleteResponse {
+    string message = 1;
+}
+
+message DeleteResponse {
+    oneof response {
+        SuccessDeleteResponse success = 1;
+        ErrorResponse error = 2;
+    }
+}
+
+enum ErrorCode {
+    UNKNOWN = 0;
+    SERVER_NOT_REGISTERED = 1;
+    SERVICE_NOT_REGISTERED = 2;
+}
+
+message ErrorResponse {
+    ErrorCode errorCode = 1;
+    map<string, string> metadata = 2;
+}
+
+service NamingService {
+    rpc register(RegisterRequest) returns (RegisterResponse);
+    rpc lookup(LookupRequest) returns (LookupResponse);
+    rpc getSubscribers(SubscriberRequest) returns (SubscriberResponse);
+    rpc delete(DeleteRequest) returns (DeleteResponse);
+}

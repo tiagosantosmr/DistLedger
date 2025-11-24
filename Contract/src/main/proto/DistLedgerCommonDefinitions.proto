@@ -1,0 +1,44 @@
+syntax = "proto3";
+package pt.tecnico.distledger.grpc;
+option java_package="pt.tecnico.distledger.contract";
+
+// Common definitions of the DistLedger Service contract
+
+enum OperationType {
+  OP_UNSPECIFIED = 0;
+  OP_TRANSFER_TO = 1;
+  OP_CREATE_ACCOUNT = 2;
+  OP_DELETE_ACCOUNT = 3;
+}
+
+message Timestamp {
+  repeated int32 value = 1;
+}
+
+message Operation {
+  string id = 1;
+  Timestamp timestamp = 2;
+  OperationType type = 3;
+  string userId = 4;
+  string destUserId = 5;  //only for transferTo operations
+  int32 amount = 6;  //only for transferTo operations
+}
+
+message LedgerState {
+  repeated Operation ledger = 1;
+}
+
+message LogRecord {
+  int32 replicaManagerNumber = 1; // "A" -> 1, "B" -> 2, ...
+  repeated int32 newTS = 2;
+  Operation operation = 3;
+}
+
+message UpdateLog {
+  repeated LogRecord record = 1;
+}
+
+message ServerInfo {
+  string qualifier = 1;
+  string address = 2;
+}
